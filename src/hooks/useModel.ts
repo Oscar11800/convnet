@@ -16,6 +16,7 @@ export type FilterWeights = {
 
 export function useModel() {
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [errorMsg, setErrorMsg] = useState<string>('');
   const modelRef = useRef<tf.LayersModel | null>(null);
   const multiRef = useRef<tf.LayersModel | null>(null);
   const filtersRef = useRef<FilterWeights | null>(null);
@@ -50,6 +51,7 @@ export function useModel() {
         setStatus('ready');
       } catch (e) {
         console.error('Model load failed:', e);
+        setErrorMsg(e instanceof Error ? e.message : String(e));
         setStatus('error');
       }
     }
@@ -75,5 +77,5 @@ export function useModel() {
     });
   }
 
-  return { status, infer, filters: filtersRef };
+  return { status, errorMsg, infer, filters: filtersRef };
 }

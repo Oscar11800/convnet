@@ -11,7 +11,7 @@ export default function App() {
   const canvasRef = useRef<DrawCanvasHandle>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [activations, setActivations] = useState<LayerActivations | null>(null);
-  const { status, infer, filters } = useModel();
+  const { status, errorMsg, infer, filters } = useModel();
 
   const runInference = useCallback(async () => {
     const imgData = canvasRef.current?.get28x28();
@@ -51,12 +51,9 @@ export default function App() {
             </div>
           )}
           {status === 'error' && (
-            <div className="text-red-400 text-sm pt-1">
-              ⚠ Model not found. Run{' '}
-              <code className="text-red-300 bg-red-950/30 px-1 rounded">
-                python training/train.py
-              </code>{' '}
-              first.
+            <div className="text-red-400 text-sm pt-1 max-w-lg">
+              ⚠ Model failed to load.{' '}
+              {errorMsg && <span className="text-red-300 font-mono text-xs block mt-1">{errorMsg}</span>}
             </div>
           )}
         </div>

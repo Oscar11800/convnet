@@ -2,6 +2,7 @@
 """Train a small MNIST ConvNet and export to TensorFlow.js format."""
 import os
 import sys
+import json
 
 try:
     import tensorflow as tf
@@ -51,5 +52,18 @@ print(f"Test accuracy: {acc:.4f}")
 
 print(f"Exporting to {OUT_DIR}...")
 tfjs.converters.save_keras_model(model, OUT_DIR)
+
+# Patch model.json: TF.js expects modelTopology.class_name at top level,
+# but newer Keras versions nest it under model_config.
+model_json_path = os.path.join(OUT_DIR, 'model.json')
+with open(model_json_path) as f:
+    d = json.load(f)
+top = d['modelTopology']
+if 'model_config' in top and 'class_name' not in top:
+    top.update(top.pop('model_config'))
+    with open(model_json_path, 'w') as f:
+        json.dump(d, f, separators=(',', ':'))
+    print("Patched model.json for TF.js compatibility")
+
 print("Done! Files written to public/model/")
 print("Now run: npm run build && npm run deploy")
