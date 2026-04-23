@@ -63,8 +63,11 @@ export default function App() {
         <div className="flex gap-8 items-start">
           {/* Left: Drawing canvas */}
           <div className="flex-shrink-0">
-            <p className="text-slate-400 text-xs mb-2 uppercase tracking-widest">
-              Input (560×560 → 28×28)
+            <p className="text-slate-400 text-xs mb-0.5 uppercase tracking-widest font-semibold">
+              Input
+            </p>
+            <p className="text-slate-500 text-xs mb-2 leading-relaxed max-w-[240px]">
+              Draw any digit 0–9. Your stroke is scaled down to 28×28 pixels and fed into the network on every lift of the pen.
             </p>
             <DrawCanvas ref={canvasRef} onStroke={onStroke} />
           </div>
@@ -77,6 +80,7 @@ export default function App() {
               name="conv2d"
               label="Conv2D Layer 1"
               shape="26×26 × 16 filters"
+              description="16 learned filters slide across your drawing, each hunting for a different low-level pattern — edges, curves, corners. Each small image shows where one filter fired. Bright = strong response, dark = nothing detected."
               activations={activations?.conv2d ?? null}
               filters={conv1Filters}
               quote={quoteFor('conv2d')}
@@ -85,6 +89,7 @@ export default function App() {
               name="pool1"
               label="MaxPool Layer 1"
               shape="13×13 × 16"
+              description="Each map is spatially compressed 2×: only the strongest activation in every 2×2 patch survives. This halves the resolution and makes the network less sensitive to exactly where a stroke appears on the canvas."
               activations={activations?.pool1 ?? null}
               quote={quoteFor('pool1')}
             />
@@ -92,6 +97,7 @@ export default function App() {
               name="conv2d_1"
               label="Conv2D Layer 2"
               shape="11×11 × 32 filters"
+              description="32 filters now scan the compressed edge maps, combining simple patterns into more complex ones — strokes, loops, junctions. These deeper features are what distinguishes a '7' from a '1', or a '6' from an '8'."
               activations={activations?.conv2d_1 ?? null}
               filters={conv2Filters}
               quote={quoteFor('conv2d_1')}
@@ -100,6 +106,7 @@ export default function App() {
               name="pool2"
               label="MaxPool Layer 2"
               shape="5×5 × 32"
+              description="A second round of compression leaves a tiny 5×5 summary of your digit's structure. By this point, exact pixel positions are gone — only the essential shape remains. These 800 numbers feed the final classifier."
               activations={activations?.pool2 ?? null}
               quote={quoteFor('pool2')}
             />

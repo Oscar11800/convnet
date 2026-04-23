@@ -5,12 +5,13 @@ interface Props {
   name: string;
   label: string;
   shape: string;
+  description: string;
   activations: number[][][][] | null; // [1, H, W, C]
   filters?: number[][][][] | null;    // [kH, kW, inC, outC]
   quote?: { title: string; quote: string; page: string };
 }
 
-export function LayerViz({ name: _name, label, shape, activations, filters, quote }: Props) {
+export function LayerViz({ name: _name, label, shape, description, activations, filters, quote }: Props) {
   const [showQuote, setShowQuote] = useState(false);
 
   // activations[0] gives [H, W, C] — H rows, each row is W cols, each col is C values
@@ -41,7 +42,7 @@ export function LayerViz({ name: _name, label, shape, activations, filters, quot
 
   return (
     <div className="bg-slate-900 rounded-2xl p-4 border border-slate-800">
-      <div className="flex items-center gap-2 mb-3">
+      <div className="flex items-center gap-2 mb-1">
         <span className="font-mono text-cyan-400 text-sm font-bold">{label}</span>
         <span className="text-slate-500 text-xs">{shape}</span>
         {quote && (
@@ -54,6 +55,8 @@ export function LayerViz({ name: _name, label, shape, activations, filters, quot
           </button>
         )}
       </div>
+
+      <p className="text-slate-400 text-xs mb-3 leading-relaxed">{description}</p>
 
       {showQuote && quote && (
         <div className="mb-3 p-3 bg-amber-950/30 border border-amber-800/50 rounded-lg text-xs">

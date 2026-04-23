@@ -9,13 +9,16 @@ export function ProbabilityBars({ probs }: Props) {
 
   return (
     <div className="bg-slate-900 rounded-2xl p-4 border border-slate-800">
-      <div className="flex items-center gap-2 mb-3">
+      <div className="flex items-center gap-2 mb-1">
         <span className="font-mono text-cyan-400 text-sm font-bold">Softmax Output</span>
         <span className="text-slate-500 text-xs">[10 classes]</span>
         {prediction >= 0 && probs && probs[prediction] > 0.5 && (
           <span className="ml-auto text-2xl font-bold text-white">{prediction}</span>
         )}
       </div>
+      <p className="text-slate-400 text-xs mb-3 leading-relaxed">
+        The network's final answer. Each bar is the network's confidence that your digit is 0–9. All bars sum to 100% — the tallest bar is its best guess.
+      </p>
       <div className="space-y-1.5">
         {DIGITS.map((d, i) => {
           const p = probs ? probs[i] : 0;
